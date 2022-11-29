@@ -1,5 +1,5 @@
-const {Server} = require("socket.io");
-const {Productos, Mensajes} = require("./db/database.js")
+const { Server } = require("socket.io");
+const { Productos, Mensajes } = require("./db/db.js")
 
 let io;
 
@@ -9,23 +9,19 @@ const initServer = (httpServer) => {
 }
 
 const setEvents = (io) => {
-
     const ProductosDB = new Productos();
-    ProductosDB.crearTabla();
     const MensajesDB = new Mensajes();
-    MensajesDB.crearTabla();
 
     io.on("connection", async (socketClient) => {
         console.log("Nuevo cliente, id: " + socketClient.id);
-
-        console.log(await ProductosDB.conseguirData())
-        if (await ProductosDB.conseguirData().length !== 0){
-            emit("product-history", await ProductosDB.conseguirData())
+        console.log(await ProductosDB.getProducts())
+        if (await ProductosDB.getProducts().length !== 0){
+            emit("product-history", await ProductosDB.getProducts())
         }
         
-        console.log(await MensajesDB.conseguirData())
-        if (await MensajesDB.conseguirData().length !== 0){
-            emit("message-history", await MensajesDB.conseguirData())
+        console.log(await MensajesDB.getMsgs())
+        if (await MensajesDB.getMsgs().length !== 0){
+            emit("message-history", await MensajesDB.getMsgs())
         }
 
         socketClient.on("disconnection", () => {
@@ -33,13 +29,13 @@ const setEvents = (io) => {
         })
 
         socketClient.on("product", async (data) => {
-            await ProductosDB.añadirData(data)
-            emit("product", await ProductosDB.conseguirData())
+            await ProductosDB.addProduct(data)
+            emit("product", await ProductosDB.getProducts())
         })
 
         socketClient.on("message", async (data) => {
-            await MensajesDB.añadirData(data)
-            emit("message", await MensajesDB.conseguirData())
+            await MensajesDB.addMsg(data)
+            emit("message", await MensajesDB.getMsgs())
         })
     }) 
     
