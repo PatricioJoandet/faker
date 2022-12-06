@@ -8,7 +8,7 @@ faker.locale = 'es';
 
 const router = Router();
 
-router.get('/products/', (req, res, next) => {
+router.get('/', (req, res, next) => {
   try{
     let data = {productos: []};
     for(let i = 0; i<5; i++){
@@ -18,7 +18,7 @@ router.get('/products/', (req, res, next) => {
         url: faker.image.food(),
       })
     }
-    res.render("productos", data);
+    res.render("productos.hbs", data);
   } catch(error){
       next(error)
   }
