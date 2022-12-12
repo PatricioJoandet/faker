@@ -1,21 +1,44 @@
-const server = require("express").Router();
+const { Router } = require("express")
+const passport = require('passport');
+const Auth = require('../middlewares/auth.js');
 
-server.get('/login', (req, res) => {
-  res.render('login.hbs');
+const login = Router();
+
+
+login.get('/signup-error',(req, res)=>{
+  res.render("signup-error", {});
+})
+
+login.get('/login-error',(req, res)=>{
+  res.render("login-error", {});
+})
+
+login.get('/signup', (req, res) => {
+  res.render('signup');
 });
 
-server.post('/login', (req, res) => {
-  let userName = req.body.name;
-  req.session.name = userName;
-  res.redirect('products')
-});
-
-server.get('/logout', (req, res) => {
-  req.session.destroy((err) =>{
-    if(!err){
-      res.render("logout");
-    } else res.send({ status: "Logout Error", body: err})
+login.get('/logout', (req, res) => {
+  const { user } = req.user;
+  req.logout((err)=>{
+    if(err)return err;
+    res.render('logout', {user})
   })
 })
 
-module.exports = server
+login.get('/login', Auth, (req, res) => {
+  res.render('login')
+});
+
+login.get('/', Auth, (req, res) => {
+  res.render('login')
+});
+
+login.post("/login", passport.authenticate("login", { failureRedirect: "/login-error"})), (req,res) => {
+  res.redirect("/")
+};
+
+login.post('/signup', passport.authenticate("signup", { failureRedirect: "/signup-error"}), (req, res) => {
+  res.redirect("/")
+})
+
+module.exports = login

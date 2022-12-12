@@ -13,6 +13,7 @@ class DB {
       return await this.schema.find({})
     } catch (error) {
       console.log("Error al buscar data")
+      throw Error("Error");
     }
   }
 
@@ -22,6 +23,7 @@ class DB {
       return res;
     } catch (error) {
       console.log("Error al guardar data")
+      throw Error("Error");
     }
   }
 
@@ -29,7 +31,7 @@ class DB {
 class Mensajes extends DB{
   constructor(){
     super(
-      mongoose.model("mensajes", {
+      mongoose.model("messages", {
         author: {
           id: { type: String, required: true },
           nombre: { type: String, required: true },
@@ -55,7 +57,7 @@ class Mensajes extends DB{
 class Productos extends DB{
   constructor(){
     super(
-      mongoose.model("productos", {
+      mongoose.model("products", {
         nombre: { type: String, required: true },
         precio: { type: Number, required: true },
         url: { type: String, required: true },
