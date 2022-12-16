@@ -1,0 +1,11 @@
+
+{{#if user}}
+  <p>Name: {{user.name}}</p>
+  <p>Address: {{user.address}}</p>
+  <p>Visits: {{user.contador}}</p>
+  <form action="/logout" method="POST">
+    <div>
+      <input type="submit" value="Log Out" />
+    </div>
+  </form>
+{{/if}}

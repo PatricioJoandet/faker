@@ -1,0 +1,26 @@
+<div>
+  <h2>Productos</h2>
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Picture</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#if products.length}}
+          {{#each products}}
+            <tr>
+              <th></th>
+              <td>{{this.name}}</td>
+              <td>${{this.price}}</td>
+              <td><img class="w-1/2" src={{this.url}} /></td>
+            </tr>
+          {{/each}}
+        {{/if}}
+      </tbody>
+    </table>
+  </div>

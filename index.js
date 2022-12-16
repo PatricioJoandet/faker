@@ -1,42 +1,26 @@
-const express = require("express");
-const { initServer, emit } = require("./socket");
-const http = require("http");
-const bodyParser = require("body-parser");
-const router = require('./routes/index.js')
-const productsRouter = require('./routes/products.js')
-const loginRouter = require('./routes/login.js')
+import express from "express";
+import { initServer, emit } from "./socket.js";
+import http from "http";
+import bodyParser from "body-parser";
+import { login, products } from './routes/index.js';
+import MongoStore from 'connect-mongo';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import handlebars from 'express-handlebars';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from "passport-local";
+import * as strategy from './passport/strat.js';
+import { User } from './models/user.js';
+import * as dotenv from 'dotenv';
+dotenv.config()
+const PORT = process.env.PORT || 8080;
 const app = express();
-require('dotenv').config();
-const PORT = process.env.PORT;
-const MongoStore = require('connect-mongo');
-const advOpt = { useNewUrlParser: true, useUnifiedTopology: true };
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const handlebars = require('express-handlebars');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const strat = require('./passport/strat.js')
-
-app.engine("hbs", handlebars.engine({ extname: ".hbs", defaultLayout:"main.hbs"}));
-app.set("view engine", "hbs");
-app.set("views", "./views");
-app.use(express.static("./static"));
-app.use(express.urlencoded({ extended: true }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
-
-app.use('/', loginRouter);
-app.use('/api', productsRouter);
 
 app.use(cookieParser())
 app.use(
   session({
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URL,
-      mongoOptions: advOpt,
       ttl: 600,
     }),
     secret: "secreto",
@@ -48,9 +32,23 @@ app.use(
     },
   })
 );
+app.engine("hbs", handlebars.engine({ extname: ".hbs", defaultLayout:"main.hbs"}));
+app.set("view engine", "hbs");
+app.set("views", "./views");
+app.use(express.static("./static"));
+app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-passport.use('login', new LocalStrategy({ passReqToCallback: true }, strat.login));
-passport.use('signup', new LocalStrategy({ passReqToCallback: true }, strat.signUp));
+
+app.use('/', login);
+app.use('/api', products);
+
+
+passport.use('login', new LocalStrategy({ passReqToCallback: true }, strategy.login));
+passport.use('signup', new LocalStrategy({ passReqToCallback: true }, strategy.signUp));
 
 passport.serializeUser((user, done) => {
   done(null, user._id);

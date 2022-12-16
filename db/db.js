@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose
-require('dotenv').config();
+import mongoose, { Schema } from "mongoose";
+import * as dotenv from 'dotenv';
+dotenv.config()
 mongoose.connect(process.env.MONGO_URL);
 
 class DB {
@@ -74,6 +74,6 @@ class Productos extends DB{
   }
 }
 
-module.exports= { Productos, Mensajes }
+export { Productos, Mensajes }
 
 

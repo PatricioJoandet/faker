@@ -13,12 +13,12 @@
     "normalizr": "^3.6.2",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
-    "pug": "^3.0.2",
     "socket.io": "^4.5.3"
   },
   "name": "nodejs-sql",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

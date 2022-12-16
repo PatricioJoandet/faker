@@ -1,8 +1,5 @@
-const express = require('express');
-const { Router } = express;
-
-const fakerJs = require('@faker-js/faker');
-const { faker } = fakerJs;
+import { Router } from 'express';
+import { faker } from '@faker-js/faker';
 
 faker.locale = 'es';
 
@@ -24,4 +21,4 @@ products.get('/', (req, res, next) => {
   }
 })
 
-module.exports = products;
+export default products;

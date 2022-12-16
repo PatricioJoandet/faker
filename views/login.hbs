@@ -1,0 +1,36 @@
+
+<div>
+  <div>
+    <h1>Log In</h1>
+    <form
+      action="/login"
+      method="post"
+      role="form"
+      autocomplete="off"
+    >
+      <input
+        id="nombre"
+        name="username"
+        class="input input-bordered w-full"
+        placeholder="Usuario"
+        type="text"
+        required
+      />
+      <input
+        id="password"
+        name="password"
+        placeholder="Contraseña"
+        type="password"
+        required
+      />
+      <input type="submit" value="Log in" />
+    </form>
+    <div></div>
+    <div>
+      <input
+        onclick="location.href = '/signup'"
+        value="Crear cuenta"
+      />
+    </div>
+  </div>
+</div>

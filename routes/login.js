@@ -1,7 +1,6 @@
-const { Router } = require("express")
-const passport = require('passport');
-const Auth = require('../middlewares/auth.js');
-
+import { Router } from "express";
+import passport from 'passport';
+import { Authenticated, PassportAuth} from '../middlewares/index.js';
 const login = Router();
 
 
@@ -25,11 +24,11 @@ login.get('/logout', (req, res) => {
   })
 })
 
-login.get('/login', Auth, (req, res) => {
+login.get('/login', Authenticated, (req, res) => {
   res.render('login')
 });
 
-login.get('/', Auth, (req, res) => {
+login.get('/', Authenticated, (req, res) => {
   res.render('login')
 });
 
@@ -41,4 +40,4 @@ login.post('/signup', passport.authenticate("signup", { failureRedirect: "/signu
   res.redirect("/")
 })
 
-module.exports = login
+export default login;

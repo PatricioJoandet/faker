@@ -1,5 +1,5 @@
-const User = require('../models/user.js');
-const bcrypt = require("bcrypt");
+import { User } from '../models/user.js';
+import bcrypt from "bcrypt";
 
 const validatePassword = (user, pass) => {
   return bcrypt.compareSync(pass, user.password);
@@ -21,7 +21,7 @@ const login = (req, user, password, cb) =>{
 };
 
 const signUp = (req, user, password, cb) =>{
-  User.findOne({ user: user }, (err, user) =>{
+  User.findOne({ username: user }, async (err, user) =>{
     if(err){
       console.log("Error al registrarse");
       return cb(err);
@@ -30,12 +30,13 @@ const signUp = (req, user, password, cb) =>{
       console.log("Ya existe el usuario");
       return cb(null, false);
     } else {
+      const regParams = req.body;
       const newUser = new User();
-      newUser.user = user;
-      newUser.password = createHash(password);
-      newUser.save().then((datos) => cb(null, datos)).catch(null, false);
+      newUser.username = regParams.username;
+      newUser.password = createHash(regParams.password);
+      await newUser.save().then((datos) => cb(null, datos)).catch(null, false);
     }
   });
 };
 
-module.exports = { login, signUp };
+export { login, signUp }
